@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Google Contacts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #4a90e2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4a90e2;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button.edit {
+            background-color: #4a90e2;
+            color: white;
+        }
+        button.edit:hover {
+            background-color: #357abd;
+        }
+        button.delete {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        button.delete:hover {
+            background-color: #cc0000;
+        }
+        .add-contact-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .edit-form {
+            display: none; /* Hidden by default */
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Google Contacts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="contact : ${contacts}">
+                <td th:if="${contact.names}" th:text="${contact.names[0].displayName}"></td>
+                <td th:if="${contact.emailAddresses}" th:text="${contact.emailAddresses[0].value}"></td>
+                <td th:if="${contact.phoneNumbers}" th:text="${contact.phoneNumbers[0].value}"></td>
+                <td>
+                    <button class="edit" onclick="showEditForm('edit-form-${contact.resourceName}')">Edit</button>
+                    <form action="/contacts/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="resourceName" th:value="${contact.resourceName}" />
+                        <button type="submit" class="delete">Delete</button>
+                    </form>
+
+                    <!-- Edit Form (Hidden by Default) -->
+                    <div id="edit-form-${contact.resourceName}" class="edit-form">
+                        <form action="/contacts/update" method="post">
+                            <input type="hidden" name="resourceName" th:value="${contact.resourceName}" />
+                            <input type="text" name="name" th:value="${contact.names[0].displayName}" required />
+                            <input type="email" name="email" th:value="${contact.emailAddresses[0].value}" />
+                            <input type="text" name="phone" th:value="${contact.phoneNumbers[0].value}" />
+                            <button type="submit">Update</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Add New Contact</h2>
+    <div class="add-contact-form">
+        <form action="/add" method="post">
+            <input type="text" name="name" placeholder="Full Name" required />
+            <input type="email" name="email" placeholder="Email Address" />
+            <input type="text" name="phone" placeholder="Phone Number" />
+            <button type="submit">Add Contact</button>
+        </form>
+    </div>
+
+    <script>
+        function showEditForm(formId) {
+            var form = document.getElementById(formId);
+            if (form.style.display === "none") {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
+        }
+    </script>
+</body> 
+</html>

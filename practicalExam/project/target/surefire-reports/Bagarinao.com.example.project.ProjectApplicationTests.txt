@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: Bagarinao.com.example.project.ProjectApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.691 s -- in Bagarinao.com.example.project.ProjectApplicationTests
